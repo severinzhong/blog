@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# local agent/project docs (keep local, don't track in git)
+AGENTS.md
+docs/
