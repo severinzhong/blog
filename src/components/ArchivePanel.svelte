@@ -47,62 +47,60 @@ function formatTag(tagList: string[]) {
 }
 
 onMount(async () => {
-		const params = new URLSearchParams(window.location.search);
-		const queryTags = params.has("tag") ? params.getAll("tag") : [];
-		const queryExcludeTags = params.has("excludeTag")
-			? params.getAll("excludeTag")
-			: [];
-		const queryCategories = params.has("category")
-			? params.getAll("category")
-			: [];
-		uncategorized = params.get("uncategorized") || "";
+	const params = new URLSearchParams(window.location.search);
+	const queryTags = params.has("tag") ? params.getAll("tag") : [];
+	const queryExcludeTags = params.has("excludeTag")
+		? params.getAll("excludeTag")
+		: [];
+	const queryCategories = params.has("category")
+		? params.getAll("category")
+		: [];
+	uncategorized = params.get("uncategorized") || "";
 
-		tags = Array.from(
-			new Set(
-				[...defaultTags, ...queryTags]
-					.map(normalizeToken)
-					.filter((token) => token.length > 0),
-			),
+	tags = Array.from(
+		new Set(
+			[...defaultTags, ...queryTags]
+				.map(normalizeToken)
+				.filter((token) => token.length > 0),
+		),
+	);
+	excludeTags = Array.from(
+		new Set(
+			[...defaultExcludeTags, ...queryExcludeTags]
+				.map(normalizeToken)
+				.filter((token) => token.length > 0),
+		),
+	);
+	categories = Array.from(
+		new Set(
+			[...defaultCategories, ...queryCategories]
+				.map((category) => category.trim())
+				.filter((category) => category.length > 0),
+		),
+	);
+
+	let filteredPosts: Post[] = sortedPosts;
+
+	if (tags.length > 0) {
+		filteredPosts = filteredPosts.filter(
+			(post) =>
+				Array.isArray(post.data.tags) &&
+				post.data.tags.some((tag) => tags.includes(normalizeToken(tag))),
 		);
-		excludeTags = Array.from(
-			new Set(
-				[...defaultExcludeTags, ...queryExcludeTags]
-					.map(normalizeToken)
-					.filter((token) => token.length > 0),
-			),
+	}
+
+	if (excludeTags.length > 0) {
+		const excludeTagSet = new Set(excludeTags);
+		filteredPosts = filteredPosts.filter(
+			(post) =>
+				!Array.isArray(post.data.tags) ||
+				!post.data.tags.some((tag) => excludeTagSet.has(normalizeToken(tag))),
 		);
-		categories = Array.from(
-			new Set(
-				[...defaultCategories, ...queryCategories]
-					.map((category) => category.trim())
-					.filter((category) => category.length > 0),
-			),
-		);
+	}
 
-		let filteredPosts: Post[] = sortedPosts;
-
-		if (tags.length > 0) {
-			filteredPosts = filteredPosts.filter(
-				(post) =>
-					Array.isArray(post.data.tags) &&
-					post.data.tags.some((tag) => tags.includes(normalizeToken(tag))),
-			);
-		}
-
-		if (excludeTags.length > 0) {
-			const excludeTagSet = new Set(excludeTags);
-			filteredPosts = filteredPosts.filter(
-				(post) =>
-					!Array.isArray(post.data.tags) ||
-					!post.data.tags.some((tag) =>
-						excludeTagSet.has(normalizeToken(tag)),
-					),
-			);
-		}
-
-		if (categories.length > 0) {
-			filteredPosts = filteredPosts.filter(
-				(post) => post.data.category && categories.includes(post.data.category),
+	if (categories.length > 0) {
+		filteredPosts = filteredPosts.filter(
+			(post) => post.data.category && categories.includes(post.data.category),
 		);
 	}
 
