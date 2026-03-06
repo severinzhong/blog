@@ -1,6 +1,7 @@
 ---
 title: 多作者内容组织实践
 summary: 多作者场景下，如何在内容集合中维护作者资料与文章引用。
+translationKey: multi-author-notes
 publishedAt: 2026-03-05
 tags:
   - content

@@ -1,22 +1,31 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
-import { SITE_META } from '../lib/site';
+import { SITE_META, withBase } from '../lib/site';
+
+const fallbackUrl = withBase('/en/');
+const basePath = withBase('/');
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_META.title} description={SITE_META.description} />
+		<meta http-equiv="refresh" content={`0;url=${fallbackUrl}`} />
 	</head>
 	<body>
 		<main>
-			<h1>AI and Digital Notes</h1>
-			<p>Choose your language to continue.</p>
+			<h1>Redirecting...</h1>
+			<p>We are redirecting you to the preferred language.</p>
 			<ul>
-				<li><a href="/zh/">中文</a></li>
-				<li><a href="/en/">English</a></li>
+				<li><a href={withBase('/zh/')}>中文</a></li>
+				<li><a href={withBase('/en/')}>English</a></li>
 			</ul>
 		</main>
+		<script is:inline define:vars={{ basePath }}>
+			const lang = (navigator.language || '').toLowerCase();
+			const locale = lang.startsWith('zh') ? 'zh' : 'en';
+			window.location.replace(`${basePath}${locale}/`);
+		</script>
 	</body>
 </html>
 

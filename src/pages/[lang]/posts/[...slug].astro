@@ -1,7 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, getEntries, render } from 'astro:content';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { formatPostSlug, isLocale, LOCALES } from '../../../lib/site';
+import { formatPostSlug, isLocale, LOCALES, withBase } from '../../../lib/site';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -33,6 +33,14 @@ if (!lang || !isLocale(lang)) {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const authorEntries = await getEntries(post.data.authors);
+const sameTopicPosts = await getCollection(
+	'posts',
+	({ data }) => !data.draft && data.translationKey === post.data.translationKey,
+);
+const topicLinks = sameTopicPosts.map((entry) => ({
+	locale: entry.data.language,
+	url: withBase(`/${entry.data.language}/posts/${formatPostSlug(entry.id, entry.data.language)}/`),
+}));
 ---
 
 <SiteLayout title={post.data.title} description={post.data.summary} locale={lang} localizedRoute={true}>
@@ -68,7 +76,17 @@ const authorEntries = await getEntries(post.data.authors);
 			))}
 		</ul>
 	</section>
-	<p><a href={`/${lang}/posts/`}>← {lang === 'zh' ? '返回文章列表' : 'Back to posts'}</a></p>
+	<section>
+		<h2>{lang === 'zh' ? '可用语言版本' : 'Available Languages'}</h2>
+		<ul class="topic-links">
+			{topicLinks.map((item) => (
+				<li>
+					<a href={item.url}>{item.locale === 'zh' ? '中文' : 'English'}</a>
+				</li>
+			))}
+		</ul>
+	</section>
+	<p><a href={withBase(`/${lang}/posts/`)}>← {lang === 'zh' ? '返回文章列表' : 'Back to posts'}</a></p>
 </SiteLayout>
 
 <style>
@@ -95,5 +113,12 @@ const authorEntries = await getEntries(post.data.authors);
 	.authors p {
 		margin: 0.2rem 0;
 		font-size: 0.95rem;
+	}
+
+	.topic-links {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		gap: 0.6rem;
 	}
 </style>

@@ -1,7 +1,7 @@
 ---
 import { getCollection, getEntries } from 'astro:content';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { formatPostSlug, isLocale, LOCALES, NAV_COPY } from '../../../lib/site';
+import { isLocale, LOCALES, NAV_COPY, withBase } from '../../../lib/site';
 
 export function getStaticPaths() {
 	return LOCALES.map((lang) => ({ params: { lang } }));
@@ -37,7 +37,7 @@ const description = lang === 'zh' ? '按时间排序浏览全部文章。' : 'Br
 		{rows.map(({ post, authors }) => (
 			<li>
 				<h2>
-					<a href={`/${lang}/posts/${formatPostSlug(post.id, lang)}/`}>{post.data.title}</a>
+					<a href={withBase(`/posts/${post.data.translationKey}/`)}>{post.data.title}</a>
 				</h2>
 				<p>{post.data.summary}</p>
 				<small>
@@ -46,7 +46,7 @@ const description = lang === 'zh' ? '按时间排序浏览全部文章。' : 'Br
 			</li>
 		))}
 	</ul>
-	<p><a href={`/${lang}/`}>← {copy.home}</a></p>
+	<p><a href={withBase(`/${lang}/`)}>← {copy.home}</a></p>
 </SiteLayout>
 
 <style>

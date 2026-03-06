@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import type { Locale } from '../lib/site';
+import { withBase, type Locale } from '../lib/site';
 
 interface Props {
 	title: string;
@@ -12,9 +12,15 @@ interface Props {
 }
 
 const { title, description, locale, localizedRoute = false } = Astro.props;
-const normalizedPath = Astro.url.pathname.replace(/^\/(zh|en)(\/|$)/, '/');
-const zhPath = `/zh${normalizedPath === '/' ? '/' : normalizedPath}`;
-const enPath = `/en${normalizedPath === '/' ? '/' : normalizedPath}`;
+const normalizedBase = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pathnameWithoutBase =
+	normalizedBase && Astro.url.pathname.startsWith(normalizedBase)
+		? Astro.url.pathname.slice(normalizedBase.length) || '/'
+		: Astro.url.pathname;
+const normalizedPath = pathnameWithoutBase.replace(/^\/(zh|en)(\/|$)/, '/');
+const zhPath = withBase(`/zh${normalizedPath === '/' ? '/' : normalizedPath}`);
+const enPath = withBase(`/en${normalizedPath === '/' ? '/' : normalizedPath}`);
+const defaultPath = withBase('/');
 ---
 
 <!doctype html>
@@ -26,7 +32,7 @@ const enPath = `/en${normalizedPath === '/' ? '/' : normalizedPath}`;
 				<>
 					<link rel="alternate" hrefLang="zh-CN" href={new URL(zhPath, Astro.site)} />
 					<link rel="alternate" hrefLang="en" href={new URL(enPath, Astro.site)} />
-					<link rel="alternate" hrefLang="x-default" href={new URL('/', Astro.site)} />
+					<link rel="alternate" hrefLang="x-default" href={new URL(defaultPath, Astro.site)} />
 				</>
 			)
 		}

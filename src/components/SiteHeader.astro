@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../lib/site';
-import { NAV_COPY } from '../lib/site';
+import { NAV_COPY, withBase } from '../lib/site';
 
 interface Props {
 	locale: Locale;
@@ -12,16 +12,16 @@ const copy = NAV_COPY[locale];
 
 <header class="site-header">
 	<div class="container">
-		<a class="brand" href="/">AI and Digital Notes</a>
+		<a class="brand" href={withBase('/')}>AI and Digital Notes</a>
 		<nav>
-			<a href={`/${locale}/`}>{copy.home}</a>
-			<a href={`/${locale}/posts/`}>{copy.posts}</a>
-			<a href="/about">{copy.about}</a>
+			<a href={withBase(`/${locale}/`)}>{copy.home}</a>
+			<a href={withBase(`/${locale}/posts/`)}>{copy.posts}</a>
+			<a href={withBase('/about/')}>{copy.about}</a>
 		</nav>
 		<div class="locale-switch">
-			<a href="/zh/" aria-label="Chinese">ZH</a>
+			<a href={withBase('/zh/')} aria-label="Chinese">ZH</a>
 			<span>/</span>
-			<a href="/en/" aria-label="English">EN</a>
+			<a href={withBase('/en/')} aria-label="English">EN</a>
 		</div>
 	</div>
 </header>

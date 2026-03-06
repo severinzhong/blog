@@ -1,6 +1,7 @@
 ---
 title: Astro 博客第一版上线
 summary: 记录第一版落地范围：双语路由、多作者、构建期项目状态。
+translationKey: astro-v1-launch
 publishedAt: 2026-03-06
 tags:
   - astro

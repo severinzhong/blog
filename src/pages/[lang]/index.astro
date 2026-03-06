@@ -3,7 +3,7 @@ import { getCollection, getEntries } from 'astro:content';
 import ProjectStatus from '../../components/ProjectStatus.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { getProjectStatus } from '../../lib/project-status';
-import { formatPostSlug, isLocale, LOCALES, NAV_COPY } from '../../lib/site';
+import { isLocale, LOCALES, NAV_COPY, withBase } from '../../lib/site';
 
 export function getStaticPaths() {
 	return LOCALES.map((lang) => ({ params: { lang } }));
@@ -49,7 +49,7 @@ const pageDescription =
 		<ul class="post-list">
 			{recentPosts.map(({ post, authors }) => (
 				<li>
-					<a href={`/${lang}/posts/${formatPostSlug(post.id, lang)}/`}>{post.data.title}</a>
+					<a href={withBase(`/posts/${post.data.translationKey}/`)}>{post.data.title}</a>
 					<p>{post.data.summary}</p>
 					<small>
 						{new Date(post.data.publishedAt).toLocaleDateString()} · {authors}
@@ -57,7 +57,7 @@ const pageDescription =
 				</li>
 			))}
 		</ul>
-		<p><a href={`/${lang}/posts/`}>{copy.readMore} →</a></p>
+		<p><a href={withBase(`/${lang}/posts/`)}>{copy.readMore} →</a></p>
 	</section>
 	<ProjectStatus locale={lang} projectStatus={projectStatus} />
 </SiteLayout>

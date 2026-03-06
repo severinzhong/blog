@@ -37,3 +37,20 @@ export function formatPostSlug(id: string, locale: Locale): string {
 	}
 	return id;
 }
+
+export function withBase(path: string): string {
+	const rawBase = import.meta.env.BASE_URL;
+	const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+	const cleanPath = path.replace(/^\/+/, '');
+	if (!cleanPath) {
+		return base;
+	}
+	return `${base}${cleanPath}`;
+}
+
+export function localeFromNavigatorLanguage(language: string | undefined): Locale {
+	if (!language) {
+		return 'en';
+	}
+	return language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+}
