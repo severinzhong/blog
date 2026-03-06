@@ -1,0 +1,43 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_META } from '../lib/site';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_META.title} description={SITE_META.description} />
+	</head>
+	<body>
+		<main>
+			<h1>AI and Digital Notes</h1>
+			<p>Choose your language to continue.</p>
+			<ul>
+				<li><a href="/zh/">中文</a></li>
+				<li><a href="/en/">English</a></li>
+			</ul>
+		</main>
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 680px;
+		padding-top: 6rem;
+		text-align: center;
+	}
+	ul {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		gap: 0.9rem;
+		justify-content: center;
+	}
+	li a {
+		display: inline-block;
+		padding: 0.6rem 1rem;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		text-decoration: none;
+	}
+</style>

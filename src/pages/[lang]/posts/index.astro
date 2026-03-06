@@ -1,0 +1,77 @@
+---
+import { getCollection, getEntries } from 'astro:content';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { formatPostSlug, isLocale, LOCALES, NAV_COPY } from '../../../lib/site';
+
+export function getStaticPaths() {
+	return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang;
+if (!lang || !isLocale(lang)) {
+	throw new Error(`Invalid locale: ${lang}`);
+}
+
+const copy = NAV_COPY[lang];
+const posts = (await getCollection('posts', ({ data }) => data.language === lang && !data.draft)).sort(
+	(a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
+);
+
+const rows = await Promise.all(
+	posts.map(async (post) => {
+		const authorEntries = await getEntries(post.data.authors);
+		return {
+			post,
+			authors: authorEntries.map((entry) => entry.data.name).join(', '),
+		};
+	}),
+);
+
+const title = lang === 'zh' ? '文章列表' : 'All Posts';
+const description = lang === 'zh' ? '按时间排序浏览全部文章。' : 'Browse all posts sorted by date.';
+---
+
+<SiteLayout title={title} description={description} locale={lang} localizedRoute={true}>
+	<h1>{title}</h1>
+	<ul class="post-list">
+		{rows.map(({ post, authors }) => (
+			<li>
+				<h2>
+					<a href={`/${lang}/posts/${formatPostSlug(post.id, lang)}/`}>{post.data.title}</a>
+				</h2>
+				<p>{post.data.summary}</p>
+				<small>
+					{new Date(post.data.publishedAt).toLocaleDateString()} · {authors} · {post.data.tags.join(', ')}
+				</small>
+			</li>
+		))}
+	</ul>
+	<p><a href={`/${lang}/`}>← {copy.home}</a></p>
+</SiteLayout>
+
+<style>
+	.post-list {
+		list-style: none;
+		padding: 0;
+		display: grid;
+		gap: 0.8rem;
+	}
+	.post-list li {
+		padding: 1rem;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 12px;
+		background: #fff;
+	}
+	.post-list h2 {
+		font-size: 1.25rem;
+		margin-bottom: 0.25rem;
+	}
+	.post-list p {
+		font-size: 0.95rem;
+		margin: 0.25rem 0;
+	}
+	.post-list small {
+		color: rgb(var(--gray));
+		font-size: 0.8rem;
+	}
+</style>

@@ -1,0 +1,41 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import type { Locale } from '../lib/site';
+
+interface Props {
+	title: string;
+	description: string;
+	locale: Locale;
+	localizedRoute?: boolean;
+}
+
+const { title, description, locale, localizedRoute = false } = Astro.props;
+const normalizedPath = Astro.url.pathname.replace(/^\/(zh|en)(\/|$)/, '/');
+const zhPath = `/zh${normalizedPath === '/' ? '/' : normalizedPath}`;
+const enPath = `/en${normalizedPath === '/' ? '/' : normalizedPath}`;
+---
+
+<!doctype html>
+<html lang={locale}>
+	<head>
+		<BaseHead title={title} description={description} />
+		{
+			localizedRoute && (
+				<>
+					<link rel="alternate" hrefLang="zh-CN" href={new URL(zhPath, Astro.site)} />
+					<link rel="alternate" hrefLang="en" href={new URL(enPath, Astro.site)} />
+					<link rel="alternate" hrefLang="x-default" href={new URL('/', Astro.site)} />
+				</>
+			)
+		}
+	</head>
+	<body>
+		<SiteHeader locale={locale} />
+		<main>
+			<slot />
+		</main>
+		<SiteFooter />
+	</body>
+</html>

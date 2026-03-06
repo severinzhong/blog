@@ -1,0 +1,79 @@
+---
+import type { Locale } from '../lib/site';
+import { NAV_COPY } from '../lib/site';
+import type { ProjectStatusResult } from '../lib/project-status';
+
+interface Props {
+	locale: Locale;
+	projectStatus: ProjectStatusResult;
+}
+
+const { locale, projectStatus } = Astro.props;
+const copy = NAV_COPY[locale];
+const emptyText =
+	locale === 'zh'
+		? '未配置 PROJECT_OWNER 或 PROJECT_REPOS，当前不展示项目动态。'
+		: 'No PROJECT_OWNER or PROJECT_REPOS configured yet, so no project updates are shown.';
+const errorText =
+	locale === 'zh'
+		? '项目状态拉取失败，请稍后重试。'
+		: 'Failed to fetch project status. Please try again later.';
+---
+
+<section class="project-status">
+	<h2>{copy.latestProjects}</h2>
+	{
+		projectStatus.error ? (
+			<p>{errorText}</p>
+		) : projectStatus.items.length === 0 ? (
+			<p>{emptyText}</p>
+		) : (
+			<ul>
+				{projectStatus.items.map((item) => (
+					<li>
+						<a href={item.url} target="_blank" rel="noreferrer">{item.fullName}</a>
+						<p>{item.description || (locale === 'zh' ? '暂无描述' : 'No description')}</p>
+						<small>
+							★ {item.stars} · Issues {item.openIssues} · Updated {new Date(item.updatedAt).toLocaleDateString()}
+						</small>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</section>
+
+<style>
+	.project-status {
+		margin-top: 2rem;
+	}
+
+	.project-status h2 {
+		font-size: 1.2rem;
+		margin-bottom: 0.7rem;
+	}
+
+	.project-status ul {
+		list-style: none;
+		padding: 0;
+		display: grid;
+		gap: 0.7rem;
+	}
+
+	.project-status li {
+		padding: 0.9rem;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 10px;
+		background: #fff;
+	}
+
+	.project-status p {
+		margin: 0.25rem 0;
+		font-size: 0.95rem;
+	}
+
+	.project-status small {
+		font-size: 0.8rem;
+		color: rgb(var(--gray));
+	}
+</style>

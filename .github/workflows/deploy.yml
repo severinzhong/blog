@@ -1,0 +1,37 @@
+name: Deploy Blog to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and Deploy
+        uses: withastro/action@v5
+        with:
+          package-manager: npm
+          node-version: 22
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+          PROJECT_OWNER: ${{ vars.PROJECT_OWNER }}
+          PROJECT_REPOS: ${{ vars.PROJECT_REPOS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
