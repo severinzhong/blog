@@ -18,13 +18,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build and Deploy
+      - name: Install, build, and upload site
         uses: withastro/action@v5
         with:
           package-manager: npm
@@ -35,3 +35,14 @@ jobs:
           PROJECT_OWNER: ${{ vars.PROJECT_OWNER }}
           PROJECT_REPOS: ${{ vars.PROJECT_REPOS }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
