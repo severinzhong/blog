@@ -6,6 +6,6 @@ import { getSortedPostsList } from "../utils/content-utils";
 const sortedPostsList = await getSortedPostsList();
 ---
 
-<MainGridLayout title="Archive">
-    <ArchivePanel sortedPosts={sortedPostsList} defaultExcludeTags={["bot"]} client:only="svelte"></ArchivePanel>
+<MainGridLayout title="SyberArchive">
+    <ArchivePanel sortedPosts={sortedPostsList} defaultTags={["bot"]} client:only="svelte"></ArchivePanel>
 </MainGridLayout>
