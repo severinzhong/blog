@@ -1,8 +1,6 @@
 ---
 import { getCollection, getEntries } from 'astro:content';
-import ProjectStatus from '../../components/ProjectStatus.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import { getProjectStatus } from '../../lib/project-status';
 import { isLocale, LOCALES, NAV_COPY, withBase } from '../../lib/site';
 
 export function getStaticPaths() {
@@ -29,7 +27,6 @@ const recentPosts = await Promise.all(
 	}),
 );
 
-const projectStatus = await getProjectStatus();
 const pageTitle = lang === 'zh' ? '博客首页' : 'Blog Home';
 const pageDescription =
 	lang === 'zh'
@@ -41,8 +38,8 @@ const pageDescription =
 	<h1>{lang === 'zh' ? '最新内容' : 'Latest Updates'}</h1>
 	<p>
 		{lang === 'zh'
-			? '这是站点第一版，支持多作者、双语路由，并在构建时同步 GitHub 项目动态。'
-			: 'This first version supports multi-author content, bilingual routes, and build-time GitHub project sync.'}
+			? '这是站点第一版，支持多作者和双语路由。'
+			: 'This first version supports multi-author content and bilingual routes.'}
 	</p>
 	<section>
 		<h2>{copy.latestPosts}</h2>
@@ -59,7 +56,6 @@ const pageDescription =
 		</ul>
 		<p><a href={withBase(`/${lang}/posts/`)}>{copy.readMore} →</a></p>
 	</section>
-	<ProjectStatus locale={lang} projectStatus={projectStatus} />
 </SiteLayout>
 
 <style>
