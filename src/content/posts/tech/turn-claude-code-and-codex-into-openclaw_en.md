@@ -6,6 +6,8 @@ category: AI
 draft: false
 ---
 
+> Cover image source: [Source](./codex_cc_openclaw.png)
+
 `Openclaw` has been gaining a lot of attention in the community recently:
 
 ::github{repo="openclaw/openclaw"}
