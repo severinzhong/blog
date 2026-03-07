@@ -1,5 +1,6 @@
 ---
 title: Turning Claude Code and Codex into Your Own "Openclaw"
+image: "./codex_cc_openclaw.png"
 published: 2026-03-07
 tags: [Artisan, Openclaw, AI]
 category: AI

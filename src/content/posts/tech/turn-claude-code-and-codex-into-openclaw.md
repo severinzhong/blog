@@ -1,5 +1,6 @@
 ---
 title: 把 Claude Code 和 Codex 变成“小龙虾”
+image: "./codex_cc_openclaw.png"
 published: 2026-03-07
 tags: [Artisan, Openclaw, AI]
 category: AI
