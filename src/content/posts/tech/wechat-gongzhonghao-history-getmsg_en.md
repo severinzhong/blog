@@ -1,5 +1,5 @@
 ---
-title: End-to-End Practice: Retrieving WeChat Official Account History
+title: "End-to-End Practice: Retrieving WeChat Official Account History"
 published: 2026-03-07
 tags: [WeChat, bot]
 category: AI
