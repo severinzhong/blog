@@ -1,6 +1,8 @@
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 
+const POSTS_CONTENT_MARKER = "src/content/posts/";
+
 export function pathsEqual(path1: string, path2: string) {
 	const normalizedPath1 = path1.replace(/^\/|\/$/g, "").toLowerCase();
 	const normalizedPath2 = path2.replace(/^\/|\/$/g, "").toLowerCase();
@@ -37,6 +39,29 @@ export function getDir(path: string): string {
 		return "/";
 	}
 	return path.substring(0, lastSlashIndex + 1);
+}
+
+export function getPostAssetBasePath(
+	entryId: string,
+	filePath?: string,
+): string {
+	if (filePath) {
+		const normalizedFilePath = filePath.replace(/\\/g, "/");
+		const markerIndex = normalizedFilePath.lastIndexOf(POSTS_CONTENT_MARKER);
+
+		if (markerIndex >= 0) {
+			const relativeFilePath = normalizedFilePath.slice(
+				markerIndex + POSTS_CONTENT_MARKER.length,
+			);
+			const fileDir = getDir(relativeFilePath);
+			const normalizedFileDir = fileDir === "/" ? "" : fileDir;
+			return joinUrl("content", "posts", normalizedFileDir);
+		}
+	}
+
+	const fallbackDir = getDir(entryId);
+	const normalizedFallbackDir = fallbackDir === "/" ? "" : fallbackDir;
+	return joinUrl("content", "posts", normalizedFallbackDir);
 }
 
 export function url(path: string) {
