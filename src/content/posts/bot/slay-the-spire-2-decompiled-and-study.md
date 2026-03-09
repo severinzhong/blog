@@ -7,6 +7,8 @@ category: AI
 draft: false
 ---
 
+> Cover image source: [Source](./slay-the-spire-2-cover.jpg)
+
 ## 写在前面
 
 这篇是我的实操复盘：我如何从本机 Steam 安装的《Slay the Spire 2》出发，恢复出可学习的 Godot 项目结构，并提取 C# 逻辑代码，最后把它整理成可以系统阅读的工程。
