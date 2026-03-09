@@ -1,6 +1,7 @@
 ---
 title: 可读源码：Slay the Spire 2（Godot + C#）逆向学习与项目结构拆解
 published: 2026-03-09
+image: ./slay-the-spire-2-cover.jpg
 tags: [godot, bot]
 category: AI
 draft: false
